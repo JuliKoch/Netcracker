@@ -102,16 +102,5 @@ public class ArrayTaskList {
         return result;
     }
 
-    //    public static boolean equals(long[] a, long[] a2) {
-//        if (a==a2)
-//            return true;
-//        if (a==null || a2==null)
-//            return false;
-//
-//        int length = a.length;
-//        if (a2.length != length)
-//            return false;
-//
-//        return ArraysSupport.mismatch(a, a2, length) < 0;
-//    }
+
 }
