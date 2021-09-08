@@ -1,5 +1,11 @@
 package ua.sumdu.j2se.julia.tasks;
 
+
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Objects;
+
 public class ArrayTaskList {
 
     private Task[] tasks;
@@ -66,4 +72,46 @@ public class ArrayTaskList {
     {
         return tasks[index];
     }
+
+    public ArrayTaskList incoming(int from, int to)
+    {
+        ArrayTaskList arrayTaskList=new ArrayTaskList();
+        for (int i=0;i<size;i++)
+        {
+            if (tasks[i].nextTimeAfter(from)!=-1 && tasks[i].nextTimeAfter(from)<=to)
+                arrayTaskList.add(tasks[i]);
+        }
+        return arrayTaskList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArrayTaskList)) return false;
+        ArrayTaskList that = (ArrayTaskList) o;
+        return size == that.size &&
+                capacity == that.capacity &&
+                CAPACITY == that.CAPACITY &&
+                Arrays.equals(tasks, that.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(size, capacity, CAPACITY);
+        result = 31 * result + Arrays.hashCode(tasks);
+        return result;
+    }
+
+    //    public static boolean equals(long[] a, long[] a2) {
+//        if (a==a2)
+//            return true;
+//        if (a==null || a2==null)
+//            return false;
+//
+//        int length = a.length;
+//        if (a2.length != length)
+//            return false;
+//
+//        return ArraysSupport.mismatch(a, a2, length) < 0;
+//    }
 }
