@@ -12,6 +12,8 @@ public class Task {
     private boolean repeat;
     public Task(String title, int time)
     {
+        if (time<0)
+             throw new IllegalArgumentException("Время не может быть отрицательным");
         this.title=title;
         this.time=time;
         active=false;
@@ -20,6 +22,14 @@ public class Task {
 
     public Task(String title, int start, int end, int interval )
     {
+        if (start<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (end<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (interval<=0)
+            throw new IllegalArgumentException("Интервал не может быть равен 0 или быть отрицательынм");
+        if (start>end)
+            throw new IllegalArgumentException("Начальное время не может быть больше конечного");
         this.title=title;
         this.start=start;
         this.end=end;
@@ -55,6 +65,8 @@ public class Task {
 
     public void setTime(int time) {
 
+        if (time<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
         if (repeat)
             repeat=false;
         this.time=time;
@@ -76,6 +88,14 @@ public class Task {
         return repeat?interval:0;
     }
     public void setTime(int start, int end, int interval) {
+        if (start<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (end<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (interval<=0)
+            throw new IllegalArgumentException("Интервал не может быть равен 0 или быть отрицательынм");
+        if (start>end)
+            throw new IllegalArgumentException("Начальное время не может быть больше конечного");
         repeat=true;
         this.start=start;
         this.end=end;
@@ -89,8 +109,15 @@ public class Task {
 
     public int nextTimeAfter(int current)
     {
+        if (current<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
         if (active && repeat) {
-            int tmp = start + (current / start) * interval;
+            int tmp=start;
+            for (;tmp<end;tmp+=interval)
+            {
+                if (tmp>current)
+                    break;
+            }
             if (tmp < end)
                 return tmp;
             else return -1;
@@ -122,4 +149,16 @@ public class Task {
         return Objects.hash(title, time, active, start, end, interval, repeat);
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", time=" + time +
+                ", active=" + active +
+                ", start=" + start +
+                ", end=" + end +
+                ", interval=" + interval +
+                ", repeat=" + repeat +
+                '}';
+    }
 }

@@ -24,6 +24,8 @@ public class ArrayTaskList {
 
     public ArrayTaskList(int capacity)
     {
+        if (capacity<0)
+            throw new NegativeArraySizeException("Размер не может быть отрицательным");
         this.capacity=capacity;
         tasks=new Task[capacity];
     }
@@ -40,6 +42,8 @@ public class ArrayTaskList {
     }
     public void add (Task task)
     {
+        if (task==null)
+            throw new IllegalArgumentException("Нельзя добавлять пустые ссылки");
         if (size>=capacity)
             increaseSize();
         tasks[size++]=task;
@@ -53,28 +57,36 @@ public class ArrayTaskList {
         {
             if(tasks[i].equals(task))
             {
-                for (int j=i;j<size;j++)
-
-                    tasks[j]=tasks[j+1];
-
+                for (int j=i;j<size;j++) {
+                    tasks[j] = tasks[j + 1];
+                }
+                size-=1;
+                return true;
             }
-            return true;
+
         }
         return false;
     }
 
     public int size()
     {
-
         return size;
     }
     public Task getTask (int index)
     {
+        if ( index>size)
+            throw new IndexOutOfBoundsException("Индекс превышает допустимые пределы");
         return tasks[index];
     }
 
     public ArrayTaskList incoming(int from, int to)
     {
+        if (from<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (to<0)
+            throw new IllegalArgumentException("Время не может быть отрицательным");
+        if (from>to)
+            throw new IllegalArgumentException("Начальное время не может быть больше конечного");
         ArrayTaskList arrayTaskList=new ArrayTaskList();
         for (int i=0;i<size;i++)
         {
@@ -102,5 +114,13 @@ public class ArrayTaskList {
         return result;
     }
 
-
+    @Override
+    public String toString() {
+        return "ArrayTaskList{" +
+                "tasks=" + Arrays.toString(tasks) +
+                ", size=" + size +
+                ", capacity=" + capacity +
+                ", CAPACITY=" + CAPACITY +
+                '}';
+    }
 }
