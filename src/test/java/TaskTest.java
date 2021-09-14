@@ -55,22 +55,40 @@ public class TaskTest {
     }
 
     @Test
-    public void newTask()
-    {
-        new Task("Встреча с девушкой", -5);
+    public void newTask() {
+        try {
+            new Task("Встреча с девушкой", -5);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
+        }
     }
 
     @Test
     public void newTaskInterval()
     {
-        new Task("Встреча с девушкой", 30,25,0);
+        try
+        {
+            new Task("Встреча с девушкой", 30,25,0);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
+        }
     }
 
     @Test
     public void addTask()
     {
         ArrayTaskList arrayTaskList=new ArrayTaskList();
-        arrayTaskList.add(null);
+        try {
+            arrayTaskList.add(null);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
+        }
     }
 
     @Test

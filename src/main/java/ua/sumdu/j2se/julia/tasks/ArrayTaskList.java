@@ -6,7 +6,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ArrayTaskList {
+public class ArrayTaskList implements AbstractTaskList {
 
     private Task[] tasks;
 
@@ -40,6 +40,7 @@ public class ArrayTaskList {
         }
         tasks=newTasks;
     }
+    @Override
     public void add (Task task)
     {
         if (task==null)
@@ -49,6 +50,7 @@ public class ArrayTaskList {
         tasks[size++]=task;
     }
 
+    @Override
     public boolean remove(Task task)
     {
         if (size==0)
@@ -68,6 +70,7 @@ public class ArrayTaskList {
         return false;
     }
 
+    @Override
     public int size()
     {
         return size;
@@ -79,6 +82,7 @@ public class ArrayTaskList {
         return tasks[index];
     }
 
+    @Override
     public ArrayTaskList incoming(int from, int to)
     {
         if (from<0)

@@ -3,9 +3,11 @@ package ua.sumdu.j2se.julia.tasks;
 
 import java.util.Objects;
 
-public class LinkedTaskList {
+public class LinkedTaskList implements AbstractTaskList {
+
 
     private Node head;
+    private Node tail;
 
     class Node
     {
@@ -22,6 +24,21 @@ public class LinkedTaskList {
             return task;
         }
 
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+            Node node = (Node) o;
+            return Objects.equals(task, node.task) &&
+                    Objects.equals(next, node.next);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(task, next);
+        }
+
         @Override
         public String toString() {
             return "Node{" +
@@ -34,6 +51,7 @@ public class LinkedTaskList {
     public LinkedTaskList()
     {
         head=null;
+        tail=null;
 
     }
 
@@ -41,18 +59,22 @@ public class LinkedTaskList {
     {
         return (head==null);
     }
+
+    @Override
     public void add(Task task)
     {
         Node addNode=new Node(task);
         if (head==null) {
             head = addNode;
+            tail=addNode;
         }
 
         else
-        addNode.next=head;
-        head=addNode;
+       tail.next=addNode;
+        tail=addNode;
     }
 
+    @Override
     public int size()
     {
         int length=0;
@@ -65,32 +87,64 @@ public class LinkedTaskList {
         return length;
     }
 
+    @Override
     public boolean remove(Task task)
     {
-        Node current=head;
-        Node previous=head;
+//        Node current=head;
+//        Node previous=head;
+//
+//
+//        while (!current.getTask().equals(task)) {
+//            if (current.next == null)
+//                return false;
+//            else
+//            {
+//                previous=current;
+//                current=current.next;
+//            }
+//
+//        }
+//        if(current==head)
+//            head=head.next;
+//        else
+//            previous.next=current.next;
+//        return true;
 
+        Node tmp=head;
+        Node p=null;
 
-        while (!current.getTask().equals(task)) {
-            if (current.next == null)
+        if (!isEmpty())
+        {
+            if (head.getTask().equals(task))
+            {
+                tmp=head.next;
+                head=tmp;
+                return true;
+            }
+            while(!tmp.next.equals(null) && !tmp.next.getTask().equals(task))
+                tmp=tmp.next;
+            if (tmp.next.equals(null) && tmp.next.getTask().equals(task))
                 return false;
             else
             {
-                previous=current;
-                current=current.next;
+                p=tmp.next;
+                if (p.equals(null))
+                    tail=tmp;
+                else
+                {
+                    tmp.next=p.next;
+                    return true;
+                }
             }
-
         }
-        if(current==head)
-            head=head.next;
-        else
-            previous.next=current.next;
-        return true;
+
+    return false;
     }
 
 
 
 
+    @Override
     public LinkedTaskList incoming(int from, int to) {
         if (from < 0)
             throw new IllegalArgumentException("Время не может быть отрицательным");
@@ -131,4 +185,7 @@ public class LinkedTaskList {
         return Objects.hash(head);
     }
 
+    public Node getTail() {
+        return tail;
+    }
 }
