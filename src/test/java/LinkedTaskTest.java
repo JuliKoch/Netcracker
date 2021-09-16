@@ -1,6 +1,6 @@
 import org.junit.Test;
 
-import ua.sumdu.j2se.julia.tasks.ArrayTaskList;
+
 import ua.sumdu.j2se.julia.tasks.LinkedTaskList;
 import ua.sumdu.j2se.julia.tasks.Task;
 
