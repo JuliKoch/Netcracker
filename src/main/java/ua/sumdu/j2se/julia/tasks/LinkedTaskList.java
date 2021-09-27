@@ -1,13 +1,47 @@
 package ua.sumdu.j2se.julia.tasks;
 
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.stream.Stream;
 
-public class LinkedTaskList implements AbstractTaskList {
+public class LinkedTaskList extends AbstractTaskList {
 
 
     private Node head;
     private Node tail;
+
+    @Override
+    public Iterator<Task> iterator() {
+        Iterator<Task> iterator = new Iterator<Task>() {
+            private int last = -1;
+            private int current = 0;
+
+
+            @Override
+            public boolean hasNext() {
+                return current < size() && getTask(current) != null;
+            }
+
+            @Override
+            public Task next() {
+                last = current;
+                return getTask(current++);
+            }
+
+            @Override
+            public void remove() {
+                if (current > 0) {
+                    LinkedTaskList.this.remove(getTask(last));
+                    current--;
+                }else {
+                    throw new IllegalStateException();
+                }
+            }
+        };
+        return iterator;
+    }
+
 
     class Node
     {
@@ -25,6 +59,7 @@ public class LinkedTaskList implements AbstractTaskList {
         }
 
 
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -39,13 +74,7 @@ public class LinkedTaskList implements AbstractTaskList {
             return Objects.hash(task, next);
         }
 
-        @Override
-        public String toString() {
-            return "Node{" +
-                    "task=" + task +
-                    ", next=" + next +
-                    '}';
-        }
+
     }
 
     public LinkedTaskList()
@@ -88,27 +117,38 @@ public class LinkedTaskList implements AbstractTaskList {
     }
 
     @Override
+    public Task getTask(int index) {
+        if (index<0 || index>=size())
+            throw new IllegalArgumentException("Некорректный индекс");
+        else
+        {
+
+                Node node=head;
+                for(int i=0;i<index;i++)
+                {
+                    node=node.next;
+                }
+                return node.getTask();
+
+            }
+        }
+
+    @Override
+    public Stream<Task> getStream() {
+        Stream.Builder<Task> taskStream=Stream.builder();
+        Node current=head;
+        while (current!=null)
+        {
+            taskStream.accept(current.getTask());
+            current=current.next;
+        }
+        return taskStream.build();
+    }
+
+
+    @Override
     public boolean remove(Task task)
     {
-//        Node current=head;
-//        Node previous=head;
-//
-//
-//        while (!current.getTask().equals(task)) {
-//            if (current.next == null)
-//                return false;
-//            else
-//            {
-//                previous=current;
-//                current=current.next;
-//            }
-//
-//        }
-//        if(current==head)
-//            head=head.next;
-//        else
-//            previous.next=current.next;
-//        return true;
 
         Node tmp=head;
         Node p=null;
@@ -141,36 +181,6 @@ public class LinkedTaskList implements AbstractTaskList {
     return false;
     }
 
-
-
-
-    @Override
-    public LinkedTaskList incoming(int from, int to) {
-        if (from < 0)
-            throw new IllegalArgumentException("Время не может быть отрицательным");
-        if (to < 0)
-            throw new IllegalArgumentException("Время не может быть отрицательным");
-        if (from > to)
-            throw new IllegalArgumentException("Начальное время не может быть больше конечного");
-        LinkedTaskList linkedTaskList = new LinkedTaskList();
-
-        Node current = head;
-        while (current!=null)
-        {
-            if (current.task.nextTimeAfter(from)!=-1 && current.task.nextTimeAfter(from)<=to)
-                linkedTaskList.add(current.task);
-            current=current.next;
-
-        }
-
-        return linkedTaskList;
-    }
-    @Override
-    public String toString() {
-        return "LinkedTaskList{" +
-                "head=" + head +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

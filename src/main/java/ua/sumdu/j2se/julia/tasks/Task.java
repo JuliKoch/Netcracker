@@ -2,6 +2,8 @@ package ua.sumdu.j2se.julia.tasks;
 
 import java.util.Objects;
 
+import static sun.jvm.hotspot.runtime.BasicObjectLock.size;
+
 public class Task {
     private String title;
     private int time;
@@ -161,4 +163,6 @@ public class Task {
                 ", repeat=" + repeat +
                 '}';
     }
+
+
 }

@@ -2,15 +2,16 @@ package ua.sumdu.j2se.julia.tasks;
 
 
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Objects;
 
-public class ArrayTaskList implements AbstractTaskList {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+public class ArrayTaskList extends AbstractTaskList {
 
     private Task[] tasks;
-
-    private int size=0;
 
     private int capacity;
 
@@ -39,6 +40,12 @@ public class ArrayTaskList implements AbstractTaskList {
             newTasks[i]=tasks[i];
         }
         tasks=newTasks;
+    }
+
+    @Override
+    public int size()
+    {
+        return size;
     }
     @Override
     public void add (Task task)
@@ -69,12 +76,7 @@ public class ArrayTaskList implements AbstractTaskList {
         }
         return false;
     }
-
     @Override
-    public int size()
-    {
-        return size;
-    }
     public Task getTask (int index)
     {
         if ( index>size)
@@ -83,22 +85,16 @@ public class ArrayTaskList implements AbstractTaskList {
     }
 
     @Override
-    public ArrayTaskList incoming(int from, int to)
-    {
-        if (from<0)
-            throw new IllegalArgumentException("Время не может быть отрицательным");
-        if (to<0)
-            throw new IllegalArgumentException("Время не может быть отрицательным");
-        if (from>to)
-            throw new IllegalArgumentException("Начальное время не может быть больше конечного");
-        ArrayTaskList arrayTaskList=new ArrayTaskList();
-        for (int i=0;i<size;i++)
+    public Stream<Task> getStream() {
+
+        Stream.Builder<Task> taskStream=Stream.builder();
+        for(int i=0;i<size();i++)
         {
-            if (tasks[i].nextTimeAfter(from)!=-1 && tasks[i].nextTimeAfter(from)<=to)
-                arrayTaskList.add(tasks[i]);
+            taskStream.accept(tasks[i]);
         }
-        return arrayTaskList;
+        return taskStream.build();
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -118,13 +114,35 @@ public class ArrayTaskList implements AbstractTaskList {
         return result;
     }
 
+
+
     @Override
-    public String toString() {
-        return "ArrayTaskList{" +
-                "tasks=" + Arrays.toString(tasks) +
-                ", size=" + size +
-                ", capacity=" + capacity +
-                ", CAPACITY=" + CAPACITY +
-                '}';
+    public Iterator<Task> iterator() {
+        Iterator<Task> iterator = new Iterator<Task>() {
+            private int last = -1;
+            private int current = 0;
+
+            @Override
+            public boolean hasNext() {
+                return current < size() && tasks[current].equals(null);
+            }
+
+            @Override
+            public Task next() {
+                last = current;
+                return tasks[current++];
+            }
+
+            @Override
+            public void remove() {
+                if (current > 0) {
+                    ArrayTaskList.this.remove(tasks[last]);
+                    current--;
+                }else {
+                    throw new IllegalStateException();
+                }
+            }
+        };
+        return iterator;
     }
 }

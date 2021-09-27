@@ -1,6 +1,8 @@
 
 import org.junit.Test;
+import ua.sumdu.j2se.julia.tasks.AbstractTaskList;
 import ua.sumdu.j2se.julia.tasks.ArrayTaskList;
+import ua.sumdu.j2se.julia.tasks.ListTypes;
 import ua.sumdu.j2se.julia.tasks.Task;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +50,7 @@ public class TaskTest {
         arrayTaskList.add(task2);
         arrayTaskList.add(task3);
         arrayTaskList.add(task4);
-        ArrayTaskList actual=arrayTaskList.incoming(128,152);
+        ArrayTaskList actual=(ArrayTaskList)arrayTaskList.incoming(128,152, ListTypes.ARRAY);
         assertEquals(expected,actual);
 
 

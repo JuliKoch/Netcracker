@@ -1,7 +1,9 @@
 import org.junit.Test;
 
 
+import ua.sumdu.j2se.julia.tasks.AbstractTaskList;
 import ua.sumdu.j2se.julia.tasks.LinkedTaskList;
+import ua.sumdu.j2se.julia.tasks.ListTypes;
 import ua.sumdu.j2se.julia.tasks.Task;
 
 import static org.junit.Assert.assertEquals;
@@ -45,7 +47,7 @@ public class LinkedTaskTest {
         linkedTaskList.add(task2);
         linkedTaskList.add(task3);
         linkedTaskList.add(task4);
-        LinkedTaskList actual=linkedTaskList.incoming(128,152);
+        LinkedTaskList actual=(LinkedTaskList)linkedTaskList.incoming(128,152, ListTypes.LiNKED);
         assertEquals(expected,actual);
 
     }
